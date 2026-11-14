@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Tài khoản của tôi | Manga Dark{% endblock %}
+{% block content %}
+<div class="section-heading"><div><p class="eyebrow">TÀI KHOẢN ĐỘC GIẢ</p><h1>Xin chào {{ reader.display_name or reader.username }}</h1><p class="muted">Thành viên từ {{ reader.created_at[:10] }}</p></div></div>
+<div class="panel profile-panel">
+  <h2>Thông tin cá nhân</h2>
+  <form method="post" class="profile-edit">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Tên đăng nhập<input value="{{ reader.username }}" disabled></label>
+    <label>Tên hiển thị<input name="display_name" value="{{ reader.display_name or reader.username }}" maxlength="40" required></label>
+    <button class="btn primary">Lưu thay đổi</button>
+  </form>
+</div>
+<div class="section-heading"><div><p class="eyebrow">ĐỌC TIẾP</p><h2>Lịch sử đọc gần đây</h2></div></div>
+<div class="history-list">
+{% for item in history %}
+  <a class="history-item" href="{{ url_for('read_chapter', chapter_id=item.chapter_id) }}">
+    <div class="mini-cover">{% if item.cover %}<img src="{{ url_for('static', filename='uploads/covers/' ~ item.cover) }}" alt="">{% else %}M{% endif %}</div>
+    <div class="history-main"><strong>{{ item.comic_title }}</strong><span>{{ item.chapter_title }} · Chương {{ item.chapter_number:g }}</span><small>Đọc gần nhất: {{ item.last_read_at[:16].replace('T', ' ') }}</small></div>
+    <span class="continue-label">Đọc tiếp →</span>
+  </a>
+{% else %}<div class="empty-state compact">Bạn chưa đọc chương nào khi đăng nhập.</div>{% endfor %}
+</div>
+<div class="section-heading"><div><p class="eyebrow">THƯ VIỆN CÁ NHÂN</p><h2>Truyện yêu thích</h2></div></div>
+{% if bookmarks %}<div class="comic-grid">
+{% for comic in bookmarks %}
+  <a class="comic-card" href="{{ url_for('comic_detail', comic_id=comic.id) }}"><div class="cover-wrap">{% if comic.cover %}<img src="{{ url_for('static', filename='uploads/covers/' ~ comic.cover) }}" alt="{{ comic.title }}">{% else %}<div class="cover-placeholder">MANGA</div>{% endif %}</div><div class="comic-info"><h3>{{ comic.title }}</h3><p>{{ comic.chapter_count }} chương</p></div></a>
+{% endfor %}</div>{% else %}<div class="empty-state compact">Bạn chưa theo dõi truyện nào. Hãy mở trang truyện và nhấn “Theo dõi truyện”.</div>{% endif %}
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}{{ comic.title }} | Manga Dark{% endblock %}
+{% block content %}
+<div class="breadcrumbs"><a href="{{ url_for('index') }}">Trang chủ</a> / {{ comic.title }}</div>
+<section class="detail-layout">
+  <div class="detail-cover">
+    {% if comic.cover %}<img src="{{ url_for('static', filename='uploads/covers/' ~ comic.cover) }}" alt="{{ comic.title }}">
+    {% else %}<div class="cover-placeholder">MANGA</div>{% endif %}
+  </div>
+  <div class="detail-content">
+    <span class="tag">{{ comic.category }}</span>
+    <h1>{{ comic.title }}</h1>
+    <p class="muted">Tác giả: {{ comic.author or 'Đang cập nhật' }}</p>
+    <p class="description">{{ comic.description or 'Chưa có mô tả cho truyện này.' }}</p>
+    <div class="detail-stats"><span>{{ chapters|length }} chương</span><span>{{ comic.status }}</span></div>
+    <div class="detail-actions">
+      {% if chapters %}<a class="btn primary" href="{{ url_for('read_chapter', chapter_id=chapters[-1].id) }}">Đọc chương mới nhất</a>{% endif %}
+      {% if reader_logged_in %}
+      <form method="post" action="{{ url_for('toggle_bookmark', comic_id=comic.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn secondary" type="submit">{% if is_bookmarked %}♥ Bỏ yêu thích{% else %}♡ Theo dõi truyện{% endif %}</button>
+      </form>
+      {% else %}<a class="btn secondary" href="{{ url_for('reader_login', next=url_for('comic_detail', comic_id=comic.id)) }}">♡ Đăng nhập để theo dõi</a>{% endif %}
+    </div>
+  </div>
+</section>
+<div class="section-heading"><div><p class="eyebrow">DANH SÁCH</p><h2>Danh sách chương</h2></div></div>
+<div class="chapter-list">
+  {% for chapter in chapters %}
+  <a href="{{ url_for('read_chapter', chapter_id=chapter.id) }}">
+    <span>{{ chapter.title }}</span><span class="muted">Chương {{ chapter.chapter_number:g }} →</span>
+  </a>
+  {% else %}
+  <div class="empty-state compact">Truyện chưa có chương nào.</div>
+  {% endfor %}
+</div>
+{% endblock %}

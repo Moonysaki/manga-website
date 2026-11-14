@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{% if mode == 'register' %}Đăng ký{% else %}Đăng nhập{% endif %} | Manga Dark{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <form class="panel auth-card" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {% if mode == 'register' %}
+      <p class="eyebrow">TÀI KHOẢN ĐỘC GIẢ</p><h1>Tạo tài khoản</h1>
+      <p class="muted">Đăng ký miễn phí để lưu truyện yêu thích và tiếp tục đọc.</p>
+      <label>Tên đăng nhập *<input name="username" required minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" autocomplete="username" placeholder="vd: manga_fan"></label>
+      <label>Tên hiển thị<input name="display_name" maxlength="40" placeholder="Tên bạn muốn hiển thị"></label>
+      <label>Mật khẩu *<input type="password" name="password" required minlength="8" autocomplete="new-password"></label>
+      <label>Nhập lại mật khẩu *<input type="password" name="confirm_password" required minlength="8" autocomplete="new-password"></label>
+      <button class="btn primary full">Đăng ký</button>
+      <p class="tiny muted">Đã có tài khoản? <a href="{{ url_for('reader_login') }}">Đăng nhập</a></p>
+    {% else %}
+      <p class="eyebrow">CHÀO MỪNG TRỞ LẠI</p><h1>Đăng nhập độc giả</h1>
+      <p class="muted">Đăng nhập để xem lịch sử và truyện đã theo dõi.</p>
+      <label>Tên đăng nhập<input name="username" required autocomplete="username"></label>
+      <label>Mật khẩu<input type="password" name="password" required autocomplete="current-password"></label>
+      <button class="btn primary full">Đăng nhập</button>
+      <p class="tiny muted">Chưa có tài khoản? <a href="{{ url_for('reader_register') }}">Đăng ký ngay</a></p>
+    {% endif %}
+  </form>
+</div>
+{% endblock %}

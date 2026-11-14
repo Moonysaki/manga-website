@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Admin đăng nhập | Manga Dark{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <form class="panel auth-card" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <p class="eyebrow">KHU VỰC QUẢN TRỊ</p>
+    <h1>Chào mừng trở lại</h1>
+    <p class="muted">Đăng nhập để quản lý truyện và chương.</p>
+    <label>Tên đăng nhập<input name="username" required autocomplete="username"></label>
+    <label>Mật khẩu<input type="password" name="password" required autocomplete="current-password"></label>
+    <button class="btn primary full">Đăng nhập</button>
+    <p class="tiny muted">Khu vực này chỉ dành cho quản trị viên được cấp quyền.</p>
+  </form>
+</div>
+{% endblock %}

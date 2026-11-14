@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Quản trị | Manga Dark{% endblock %}
+{% block content %}
+<div class="section-heading admin-heading">
+  <div><p class="eyebrow">ADMIN PANEL</p><h1>Quản lý thư viện</h1><p class="muted">Xin chào {{ admin_name }}. Chỉ quản trị viên mới có quyền đăng và chỉnh sửa nội dung.</p></div>
+  <a class="btn primary" href="{{ url_for('comic_new') }}">＋ Thêm truyện</a>
+</div>
+<div class="stats-row">
+  <div class="stat-box"><span>Tổng truyện</span><strong>{{ stats.comics }}</strong></div>
+  <div class="stat-box"><span>Tổng chương</span><strong>{{ stats.chapters }}</strong></div>
+  <div class="stat-box"><span>Tổng trang ảnh</span><strong>{{ stats.pages }}</strong></div>
+</div>
+<div class="panel table-panel">
+  <h2>Danh sách truyện</h2>
+  <div class="admin-list">
+  {% for comic in comics %}
+    <div class="admin-item">
+      <div class="admin-thumb">
+        {% if comic.cover %}<img src="{{ url_for('static', filename='uploads/covers/' ~ comic.cover) }}" alt="">
+        {% else %}<span>M</span>{% endif %}
+      </div>
+      <div class="admin-item-main"><strong>{{ comic.title }}</strong><small>{{ comic.category }} · {{ comic.chapter_count }} chương · {{ comic.status }}</small></div>
+      <div class="admin-actions">
+        <a class="btn small secondary" href="{{ url_for('chapter_new', comic_id=comic.id) }}">＋ Chương</a>
+        <a class="btn small secondary" href="{{ url_for('comic_edit', comic_id=comic.id) }}">Sửa</a>
+        <form method="post" action="{{ url_for('comic_delete', comic_id=comic.id) }}" data-confirm="Xóa truyện này và toàn bộ chương?">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <button class="btn small danger">Xóa</button>
+        </form>
+      </div>
+    </div>
+    {% if comic.chapter_count %}
+    <div class="chapter-admin-list">
+      {% for ch in [] %}{% endfor %}
+      <a href="{{ url_for('comic_detail', comic_id=comic.id) }}">Mở trang truyện công khai ↗</a>
+    </div>
+    {% endif %}
+  {% else %}
+    <div class="empty-state compact">Chưa có truyện. Hãy nhấn “Thêm truyện” để bắt đầu.</div>
+  {% endfor %}
+  </div>
+</div>
+{% endblock %}

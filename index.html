@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Trang chủ | Manga Dark{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">THẾ GIỚI TRUYỆN TRANH CỦA BẠN</p>
+    <h1>Đọc truyện theo <span>cách của bạn.</span></h1>
+    <p class="muted">Khám phá bộ sưu tập truyện và những chương mới được cập nhật.</p>
+  </div>
+  <div class="hero-symbol">漫</div>
+</section>
+<form class="searchbar" method="get">
+  <input type="search" name="q" placeholder="Tìm tên truyện hoặc tác giả..." value="{{ q }}">
+  <select name="category">
+    <option value="">Tất cả thể loại</option>
+    {% for cat in categories %}<option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>{% endfor %}
+  </select>
+  <button class="btn primary">Tìm truyện</button>
+</form>
+<div class="section-heading">
+  <div><p class="eyebrow">THƯ VIỆN</p><h2>Truyện mới cập nhật</h2></div>
+  <span class="muted">{{ comics|length }} kết quả</span>
+</div>
+{% if comics %}
+<div class="comic-grid">
+  {% for comic in comics %}
+  <a class="comic-card" href="{{ url_for('comic_detail', comic_id=comic.id) }}">
+    <div class="cover-wrap">
+      {% if comic.cover %}<img src="{{ url_for('static', filename='uploads/covers/' ~ comic.cover) }}" alt="{{ comic.title }}">
+      {% else %}<div class="cover-placeholder">MANGA</div>{% endif %}
+      <span class="status-pill">{{ comic.status }}</span>
+    </div>
+    <div class="comic-info">
+      <h3>{{ comic.title }}</h3>
+      <p>{{ comic.author or 'Chưa cập nhật tác giả' }}</p>
+      <div class="card-meta"><span>{{ comic.category }}</span><span>{{ comic.chapter_count }} chương</span></div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state"><div class="empty-icon">▧</div><h3>Chưa tìm thấy truyện</h3><p>Thử từ khóa khác hoặc quay lại sau để khám phá truyện mới.</p></div>
+{% endif %}
+{% endblock %}

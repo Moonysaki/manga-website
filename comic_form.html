@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{% if comic %}Sửa truyện{% else %}Thêm truyện{% endif %} | Manga Dark{% endblock %}
+{% block content %}
+<div class="form-page panel">
+  <p class="eyebrow">QUẢN LÝ NỘI DUNG</p>
+  <h1>{% if comic %}Chỉnh sửa truyện{% else %}Thêm truyện mới{% endif %}</h1>
+  <form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <label>Tên truyện *<input name="title" required value="{{ comic.title if comic else '' }}"></label>
+    <div class="form-grid">
+      <label>Tác giả<input name="author" value="{{ comic.author if comic else '' }}"></label>
+      <label>Thể loại<input name="category" placeholder="Action, Fantasy..." value="{{ comic.category if comic else 'Khac' }}"></label>
+    </div>
+    <label>Trạng thái<select name="status">
+      {% for status in ['Dang cap nhat', 'Hoan thanh', 'Tam ngung'] %}
+      <option value="{{ status }}" {% if comic and comic.status == status %}selected{% endif %}>{{ status }}</option>
+      {% endfor %}
+    </select></label>
+    <label>Mô tả<textarea name="description" rows="5">{{ comic.description if comic else '' }}</textarea></label>
+    <label>Ảnh bìa (PNG/JPG/WEBP/GIF, tối đa 12 MB)<input type="file" name="cover" accept=".png,.jpg,.jpeg,.webp,.gif"></label>
+    {% if comic and comic.cover %}<p class="muted tiny">Đã có ảnh bìa. Để trống nếu không muốn thay ảnh.</p>{% endif %}
+    <div class="form-actions"><button class="btn primary">Lưu truyện</button><a class="btn secondary" href="{{ url_for('dashboard') }}">Hủy</a></div>
+  </form>
+</div>
+{% endblock %}
