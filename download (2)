@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+manga.db
+static/uploads/covers/*
+static/uploads/chapters/*
+!static/uploads/covers/.gitkeep
+!static/uploads/chapters/.gitkeep
